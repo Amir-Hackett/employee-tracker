@@ -1,5 +1,4 @@
 const mysql = require('mysql2');
-const promisemysql = require("promise-mysql");
 const inquirer = require('inquirer'); 
 const cTable = require('console.table'); 
 const chalk = require('chalk');
@@ -139,8 +138,7 @@ function viewManagers() {
     // set manager array
     let managerArr = [];
 
-    // Create connection using promise-sql
-    promisemysql.createConnection(db)
+    connection.createConnection(db)
         .then((conn) => {
 
             // Query all employees
@@ -206,8 +204,7 @@ function viewDeptEmployees() {
     // Set global array to store department names
     let deptArr = [];
 
-    // Create new connection using promise-sql
-    promisemysql.createConnection(db)
+    connection.createConnection(db)
     .then((conn) => {
 
         // Query just names of department
@@ -376,7 +373,7 @@ function updateRole() {
     let roleArr = [];
 
     // Create connection using promise-sql
-    promisemysql.createConnection(db
+    connection.createConnection(db
     ).then((conn) => {
         return Promise.all([
 

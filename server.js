@@ -198,11 +198,10 @@ function viewDeptEmployees() {
     // Set global array to store department names
     let deptArr = [];
 
-    connection.createConnection(db)
-    .then((conn) => {
+    promisemysql.createConnection(db).then((connect) => {
 
         // Query just names of department
-        return conn.query('SELECT department_name FROM department');
+        return connect.query('SELECT department_name FROM department');
     }).then(function(value) {
 
         // Place all names within deptArr
@@ -296,7 +295,6 @@ function addRole() {
                 message: "What is the department ID of the new role?",
             }
         ])
-
         .then(function(response) {
             connection.query("INSERT INTO role SET ?", {
                     id: response.roleID,
@@ -366,13 +364,12 @@ function updateRole() {
     let employeeArr = [];
     let roleArr = [];
 
-    connection.createConnection
-    .then((conn) => {
+    promisemysql.createConnection(db).then((connect) => {
         return Promise.all([
 
             // query all roles and employee
-            conn.query('SELECT id, title FROM role ORDER BY title ASC'),
-            conn.query("SELECT employee.id, concat(employee.first_name, ' ' ,  employee.last_name) AS Employee FROM employee ORDER BY Employee ASC")
+            connect.query('SELECT id, title FROM role ORDER BY title ASC'),
+            connect.query("SELECT employee.id, concat(employee.first_name, ' ' ,  employee.last_name) AS Employee FROM employee ORDER BY Employee ASC")
         ]);
     }).then(([roles, employees]) => {
 

@@ -1,7 +1,4 @@
 {
-  "scripts": {
-    "start": "node server.js"
-  },
   "dependencies": {
     "chalk": "^4.1.2",
     "console.table": "^0.10.0",
@@ -10,5 +7,8 @@
     "inquirer": "^8.2.4",
     "mysql2": "^2.3.3",
     "promise-mysql": "^5.2.0"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }

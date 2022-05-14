@@ -6,6 +6,8 @@ const chalk = require('chalk');
 const figlet = require('figlet');
 const {db, connection}  = require('./db/connection');
 
+const viewBudget = require('./routes/budget')
+
 connection.connect(err => {
     if (err) {
         return console.error('error: ' + err.message);
@@ -90,7 +92,7 @@ function mainMenu() {
                     break;
                 case "Exit":
                     connection.end();
-                    break;
+                    // break;
             }
         });
 }
@@ -111,7 +113,7 @@ function viewEmployees() {
     let query = "SELECT e.id, e.first_name, e.last_name, role.title, department.department_name AS department, role.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY id ASC";
     connection.query(query, function(err, res) {
         console.log(chalk.yellow.bold(`====================================================================================`));
-        console.log(`                              ` + chalk.blue.bold(`Current Employee:`));
+        console.log(`                              ` + chalk.blue.bold(`Employees:`));
         console.log(chalk.yellow.bold(`====================================================================================`));
 
         console.table(res);
@@ -126,7 +128,7 @@ function viewRoles() {
 
     connection.query(query, function(err, res) {
         console.log(chalk.yellow.bold(`====================================================================================`));
-        console.log(`                              ` + chalk.blue.bold(`Current Employee role:`));
+        console.log(`                              ` + chalk.blue.bold(`Employee Roles:`));
         console.log(chalk.yellow.bold(`====================================================================================`));
 
         console.table(res);
@@ -178,15 +180,14 @@ function viewManagers() {
                     return err;
                 
 
-                // display results with console.table
+                // Results displayed in console.table
                 console.log("\n");
                 console.log(chalk.yellow.bold(`====================================================================================`));
-                console.log(`                              ` + chalk.blue.bold(`Employee by Manager:`));
+                console.log(`                              ` + chalk.blue.bold(`Employees by Manager:`));
                 console.log(chalk.yellow.bold(`====================================================================================`));
 
                 console.table(res);
 
-                // back to main menu
                 mainMenu();
             });
         });
@@ -226,16 +227,15 @@ function viewDeptEmployees() {
                 connection.query(query, (err, res) => {
                     if(err) return err;
 
-                    // Show results in console.table
+                    // Results displayed in console.table
                     console.log("\n");
 
                     console.log(chalk.yellow.bold(`====================================================================================`));
-                    console.log(`                              ` + chalk.blue.bold(`Employee by Department:`));
+                    console.log(`                              ` + chalk.blue.bold(`Employees by Department:`));
                     console.log(chalk.yellow.bold(`====================================================================================`));
 
                     console.table(res);
 
-                    // Back to main menu
                     mainMenu();
                 });
             });
@@ -381,7 +381,6 @@ function updateRole() {
         // place all empoyees in array
         for (i=0; i < employees.length; i++){
             employeeArr.push(employees[i].Employee);
-            //console.log(value[i].name);
         }
 
         return Promise.all([roles, employees]);
@@ -426,12 +425,10 @@ function updateRole() {
                 // confirm update employee
                 console.log(`\n ${answer.employee} ROLE UPDATED TO ${answer.role}...\n `);
 
-                // back to main menu
                 mainMenu();
             });
         });
     });
-
 }
 
 function updateManager() {
@@ -484,12 +481,10 @@ function updateManager() {
                 // confirm update employee
                 console.log(`\n ${answer.employee} MANAGER UPDATED TO ${answer.manager}...\n`);
 
-                // go back to main menu
                 mainMenu();
             });
         });
     });
-
 }
 
 function deleteEmployee() {
@@ -535,7 +530,6 @@ function deleteEmployee() {
                     // confirm deleted employee
                     console.log(`\n EMPLOYEE '${answer.employee}' DELETED...\n `);
 
-                    // back to main menu
                     mainMenu();
                 });
             }
@@ -544,7 +538,6 @@ function deleteEmployee() {
                 // if not confirmed, go back to main menu
                 console.log(`\n EMPLOYEE '${answer.employee}' NOT DELETED...\n `);
 
-                // back to main menu
                 mainMenu();
             }
 
@@ -580,7 +573,6 @@ function deleteRole() {
         }).then(() => {
 
             inquirer.prompt([{
-                // prompt user of of roles
                 name: "role",
                 type: "list",
                 message: "Which role would you like to delete?",
@@ -610,7 +602,6 @@ function deleteRole() {
                         // confirm role has been added
                         console.log(`\n ROLE '${answer.role}' DELETED...\n `);
 
-                        //back to main menu
                         mainMenu();
                     });
                 }
@@ -619,7 +610,6 @@ function deleteRole() {
                     // if not confirmed, do not delete
                     console.log(`\n ROLE '${answer.role}' NOT DELETED...\n `);
 
-                    //back to main menu
                     mainMenu();
                 }
             });
@@ -687,7 +677,6 @@ function deleteDepartment() {
                         // confirm department has been deleted
                         console.log(`\n DEPARTMENT '${answer.dept}' DELETED...\n `);
 
-                        // back to main menu
                         mainMenu();
                     });
                 }
@@ -696,7 +685,6 @@ function deleteDepartment() {
                     // do not delete department if not confirmed and go back to main menu
                     console.log(`\n DEPARTMENT '${answer.dept}' NOT DELETED...\n `);
 
-                    //back to main menu
                     mainMenu();
                 }
 
@@ -705,23 +693,23 @@ function deleteDepartment() {
     });
 }
 
-// View Department Budget
-function viewBudget() {
-    console.log(chalk.yellow.bold(`====================================================================================`));
-    console.log(`                              ` + chalk.blue.bold(`Budget By Department:`));
-    console.log(chalk.yellow.bold(`====================================================================================`));
+// function viewBudget() {
+//     console.log(chalk.yellow.bold(`====================================================================================`));
+//     console.log(`                              ` + chalk.blue.bold(`Budget By Department:`));
+//     console.log(chalk.yellow.bold(`====================================================================================`));
 
-    const sql =     `SELECT department_id AS id, 
-    department.department_name AS department,
-              SUM(salary) AS budget
-              FROM  role 
-              INNER JOIN department ON role.department_id = department.id GROUP BY role.department_id`;
-    connection.query(sql, (error, response) => {
-        if (error) throw error;
-        console.table(response);
-        console.log(chalk.yellow.bold(`====================================================================================`));
+//     const sql =     `SELECT department_id AS id, 
+//     department.department_name AS department,
+//               SUM(salary) AS budget
+//               FROM  role 
+//               INNER JOIN department ON role.department_id = department.id GROUP BY role.department_id`;
+//     connection.query(sql, (error, response) => {
+//         if (error) throw error;
+//         console.table(response);
+//         console.log(chalk.yellow.bold(`====================================================================================`));
 
-        // back to main menu
-        mainMenu();
-    });
-}
+//         mainMenu();
+//     });
+// }
+
+module.exports = {mainMenu}

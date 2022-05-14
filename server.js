@@ -6,8 +6,6 @@ const chalk = require('chalk');
 const figlet = require('figlet');
 const {db, connection}  = require('./db/connection');
 
-const viewBudget = require('./routes/budget')
-
 connection.connect(err => {
     if (err) {
         return console.error('error: ' + err.message);
@@ -19,7 +17,8 @@ connection.connect(err => {
     console.log(``);
     console.log(`                                                                    ` + chalk.blue.bold('Created By: Amir Hackett'));
     console.log(``);
-    console.log(chalk.yellow.bold(`==============================================================================================`));    mainMenu();
+    console.log(chalk.yellow.bold(`==============================================================================================`));    
+    mainMenu();
 });
 
 function mainMenu() {
@@ -49,7 +48,7 @@ function mainMenu() {
         .then(response => {
             switch (response.userAction) {
                 case "View Departments":
-                    viewDepartments();
+                    viewDepartments()
                     break;
                 case "View Employees":
                     viewEmployees();
@@ -88,12 +87,12 @@ function mainMenu() {
                     deleteDepartment();
                     break;
                 case "View Department Budget":
-                    viewBudget();
+                    viewBudget()
                     break;
                 case "Exit":
                     connection.end();
                     // break;
-            }
+            } 
         });
 }
 
@@ -138,7 +137,6 @@ function viewRoles() {
 
 function viewManagers() { 
     let managerArr = [];
-
 
     promisemysql.createConnection(db).then((connect) => { 
         return connect.query("SELECT DISTINCT m.id, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee e Inner JOIN employee m ON e.manager_id = m.id");
@@ -693,23 +691,21 @@ function deleteDepartment() {
     });
 }
 
-// function viewBudget() {
-//     console.log(chalk.yellow.bold(`====================================================================================`));
-//     console.log(`                              ` + chalk.blue.bold(`Budget By Department:`));
-//     console.log(chalk.yellow.bold(`====================================================================================`));
+function viewBudget() {
+    console.log(chalk.yellow.bold(`====================================================================================`));
+    console.log(`                              ` + chalk.blue.bold(`Budget By Department:`));
+    console.log(chalk.yellow.bold(`====================================================================================`));
 
-//     const sql =     `SELECT department_id AS id, 
-//     department.department_name AS department,
-//               SUM(salary) AS budget
-//               FROM  role 
-//               INNER JOIN department ON role.department_id = department.id GROUP BY role.department_id`;
-//     connection.query(sql, (error, response) => {
-//         if (error) throw error;
-//         console.table(response);
-//         console.log(chalk.yellow.bold(`====================================================================================`));
+    const sql =     `SELECT department_id AS id, 
+    department.department_name AS department,
+              SUM(salary) AS budget
+              FROM  role 
+              INNER JOIN department ON role.department_id = department.id GROUP BY role.department_id`;
+    connection.query(sql, (error, response) => {
+        if (error) throw error;
+        console.table(response);
+        console.log(chalk.yellow.bold(`====================================================================================`));
 
-//         mainMenu();
-//     });
-// }
-
-module.exports = {mainMenu}
+        mainMenu();
+    });
+}

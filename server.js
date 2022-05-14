@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+const promisemysql = require("promise-mysql");
 const inquirer = require('inquirer'); 
 const cTable = require('console.table'); 
 const chalk = require('chalk');
@@ -133,69 +134,62 @@ function viewRoles() {
     });
 };
 
-function viewManagers() {
-
-    // set manager array
+function viewManagers() { 
     let managerArr = [];
 
-    connection.createConnection(db)
-        .then((conn) => {
 
-            // Query all employees
-            return conn.query("SELECT DISTINCT m.id, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee e Inner JOIN employee m ON e.manager_id = m.id");
+    promisemysql.createConnection(db).then((connect) => { 
+        return connect.query("SELECT DISTINCT m.id, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee e Inner JOIN employee m ON e.manager_id = m.id");
 
-        }).then(function(managers){
-
-        // place all employees in array
-        for (i=0; i < managers.length; i++){
+    }).then(function (managers) { 
+        for (i = 0; i < managers.length; i ++) {
             managerArr.push(managers[i].manager);
         }
 
         return managers;
     }).then((managers) => {
 
-        inquirer.prompt({
-
-            // Prompt user of manager
+        inquirer.prompt({ 
             name: "manager",
             type: "list",
             message: "Which manager would you like to search?",
             choices: managerArr
-        })
-            .then((answer) => {
+        }).then((answer) => {
 
-                let managerID;
+            let managerID;
 
-                // get ID of manager selected
-                for (i=0; i < managers.length; i++){
-                    if (answer.manager == managers[i].manager){
-                        managerID = managers[i].id;
-                    }
+
+            for (i = 0; i < managers.length; i ++) {
+                if (answer.manager == managers[i].manager) {
+                    managerID = managers[i].id;
                 }
+            }
 
-                // query all employees by selected manager
-                const query = `SELECT e.id, e.first_name, e.last_name, role.title, department.department_name AS department, role.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager
+
+            const query = `SELECT e.id, e.first_name, e.last_name, role.title, department.department_name AS department, role.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager
         FROM employee e
         LEFT JOIN employee m ON e.manager_id = m.id
         INNER JOIN role ON e.role_id = role.id
         INNER JOIN department ON role.department_id = department.id
         WHERE e.manager_id = ${managerID};`;
 
-                connection.query(query, (err, res) => {
-                    if(err) return err;
+            connection.query(query, (err, res) => {
+                if (err) 
+                    return err;
+                
 
-                    // display results with console.table
-                    console.log("\n");
-                    console.log(chalk.yellow.bold(`====================================================================================`));
-                    console.log(`                              ` + chalk.blue.bold(`Employee by Manager:`));
-                    console.log(chalk.yellow.bold(`====================================================================================`));
+                // display results with console.table
+                console.log("\n");
+                console.log(chalk.yellow.bold(`====================================================================================`));
+                console.log(`                              ` + chalk.blue.bold(`Employee by Manager:`));
+                console.log(chalk.yellow.bold(`====================================================================================`));
 
-                    console.table(res);
+                console.table(res);
 
-                    // back to main menu
-                    mainMenu();
-                });
+                // back to main menu
+                mainMenu();
             });
+        });
     });
 }
 
@@ -372,9 +366,8 @@ function updateRole() {
     let employeeArr = [];
     let roleArr = [];
 
-    // Create connection using promise-sql
-    connection.createConnection(db
-    ).then((conn) => {
+    connection.createConnection
+    .then((conn) => {
         return Promise.all([
 
             // query all roles and employee

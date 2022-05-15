@@ -39,6 +39,8 @@ GIVEN a command-line application that accepts user input
 ## Video Description:
 The below video is a demonstration of how this application is supposed to work. 
 
+https://user-images.githubusercontent.com/99042050/168446521-af950543-509a-459c-9a03-39845b1955cc.mp4
+
 
 ## Schema Description
 

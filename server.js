@@ -90,7 +90,7 @@ function mainMenu() {
                     viewBudget()
                     break;
                 case "Exit":
-                    connection.end();
+                    process.exit();
                     // break;
             } 
         });

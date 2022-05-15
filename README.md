@@ -6,7 +6,7 @@
 ## Contents
 * [Usage](#Usage)
    * [Screenshot](#Screenshot)
-* [Video-Description](#Video-Description:)
+* [Video-Description](#Video-Description)
 * [Schema-Description](#Schema-Description)
 * [Instructions](#Instructions)
 * [Built With](#Built-With)
@@ -36,7 +36,7 @@ GIVEN a command-line application that accepts user input
 
 ![](./src/Screen-Shot.png)
 
-## Video Description:
+## Video Description
 The below video is a demonstration of how this application is supposed to work. 
 
 https://user-images.githubusercontent.com/99042050/168446521-af950543-509a-459c-9a03-39845b1955cc.mp4
@@ -66,7 +66,7 @@ https://user-images.githubusercontent.com/99042050/168446521-af950543-509a-459c-
 - Add a .env file to the root of the app with the following details
 
 ```text
-DB_NAME='all_employees'
+DB_NAME='employee'
 DB_USER='root'
 DB_PW='xxx'
 ```
